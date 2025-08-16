@@ -1,0 +1,137 @@
+"use server"
+
+import { prisma } from "@/prisma/client"
+import { cookies } from "next/headers"
+import bcrypt from "bcrypt"
+import { SignJWT, jwtVerify } from "jose"
+import { redirect } from "next/navigation"
+
+// TODO: Review cast to SessionPayload
+
+export interface SessionPayload {
+  userId: number
+  email: string
+  iat?: number
+  exp?: number
+}
+
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is required")
+  }
+  return new TextEncoder().encode(secret)
+}
+
+// Session duration (7 days)
+const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+
+export async function createSession(
+  userId: number,
+  email: string,
+): Promise<string> {
+  const payload = {
+    userId,
+    email,
+  }
+
+  const session = await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(new Date(Date.now() + SESSION_DURATION))
+    .sign(getJwtSecret())
+
+  const expiresAt = new Date(Date.now() + SESSION_DURATION)
+
+  ;(await cookies()).set("session", session, {
+    expires: expiresAt,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  })
+
+  return session
+}
+
+export async function getSession(): Promise<SessionPayload | null> {
+  const sessionCookie = (await cookies()).get("session")?.value
+
+  if (!sessionCookie) {
+    return null
+  }
+
+  try {
+    const { payload } = await jwtVerify(sessionCookie, getJwtSecret())
+    return payload as unknown as SessionPayload
+  } catch (error) {
+    console.error("Failed to verify session:", error)
+    return null
+  }
+}
+
+export async function login(email: string, password: string) {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  })
+
+  if (!user) {
+    throw new Error("Invalid email or password")
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password)
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid email or password")
+  }
+
+  await createSession(user.id, user.email)
+
+  // Return user without password
+  const { password: _, ...userWithoutPassword } = user
+  return userWithoutPassword
+}
+
+export async function logout() {
+  ;(await cookies()).delete("session")
+  redirect("/login")
+}
+
+// TODO: Should be deleted and use a middleware instead
+export async function getCurrentUser() {
+  const session = await getSession()
+
+  if (!session) {
+    return null
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+        // Exclude password
+      },
+    })
+
+    return user
+  } catch (error) {
+    console.error("Failed to get current user:", error)
+    return null
+  }
+}
+
+export async function verifySession(
+  sessionToken: string,
+): Promise<SessionPayload | null> {
+  try {
+    const { payload } = await jwtVerify(sessionToken, getJwtSecret())
+    return payload as unknown as SessionPayload
+  } catch (error) {
+    return null
+  }
+}
