@@ -5,18 +5,21 @@ import { formatCurrency } from "@/lib/core/utils"
 const movementMap = {
   [TransactionType.CASH_IN]: {
     icon: <Upload className="h-5 w-5" />,
-    color: "emerald",
+    iconClasses: "text-emerald-500 bg-emerald-100",
     subtitle: "Pago recibido",
+    amountClasses: "text-green-600",
   },
   [TransactionType.CASH_OUT]: {
     icon: <Download className="h-5 w-5" />,
-    color: "orange",
+    iconClasses: "text-orange-500 bg-orange-100",
     subtitle: "Pago enviado",
+    amountClasses: "text-red-500",
   },
   [TransactionType.SUS]: {
     icon: <Repeat className="h-5 w-5" />,
-    color: "violet",
+    iconClasses: "text-violet-500 bg-violet-100",
     subtitle: "Pago de suscripción",
+    amountClasses: "text-red-500",
   },
 }
 
@@ -31,15 +34,13 @@ export function MovementItem({
   type: TransactionType
   currency: Currency
 }) {
-  const { icon, color, subtitle } = movementMap[type]
-
-  const amountColor = type === TransactionType.CASH_IN ? "green" : "red"
+  const { icon, iconClasses, subtitle, amountClasses } = movementMap[type]
 
   return (
     <div className="flex items-center justify-between rounded-2xl border bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
       <div className="flex items-center gap-3">
         <div
-          className={`flex h-10 w-10 items-center justify-center rounded-xl text-${color}-500 bg-${color}-100`}
+          className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClasses}`}
         >
           {icon}
         </div>
@@ -48,7 +49,7 @@ export function MovementItem({
           <p className="text-muted-foreground mt-1 text-sm">{subtitle}</p>
         </div>
       </div>
-      <span className={`text-sm font-semibold text-${amountColor}-500`}>
+      <span className={`text-sm font-semibold ${amountClasses}`}>
         {formatCurrency(amountText, currency)}
       </span>
     </div>
