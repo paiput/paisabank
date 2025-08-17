@@ -10,12 +10,10 @@ import { CardComponent } from "@/lib/cards/components/card"
 import { useCards } from "@/lib/cards/hooks/useCards"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useSession } from "@/lib/auth/hooks/useSession"
 import { Transaction } from "@/generated/prisma"
 import { MovementItem } from "@/lib/movements/components/movement"
 
 export default function Home() {
-  const session = useSession()
   const { cards, loading, error } = useCards()
 
   const [movements, setMovements] = useState<Transaction[]>([])
@@ -100,11 +98,6 @@ export default function Home() {
             />
           ))}
         </div>
-        <p className="mt-4 text-center">
-          <Link href="/movements" className="font-semibold text-blue-500">
-            Ver todos
-          </Link>
-        </p>
       </section>
     </main>
   )

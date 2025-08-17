@@ -1,6 +1,9 @@
 import { Currency } from "@/generated/prisma"
 
-export function formatCurrency(amount: number | string, currency?: Currency) {
+export function formatMoneyAmount(
+  amount: number | string,
+  { currency }: { currency?: Currency } = {},
+) {
   if (typeof amount === "string") {
     amount = Number(amount)
     if (isNaN(amount)) {
@@ -9,7 +12,7 @@ export function formatCurrency(amount: number | string, currency?: Currency) {
   }
 
   return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: currency || "ARS",
+    style: currency ? "currency" : "decimal",
+    currency: currency,
   }).format(amount)
 }

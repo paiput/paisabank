@@ -1,6 +1,6 @@
 import { Currency, TransactionType } from "@/generated/prisma"
 import { Upload, Download, Repeat } from "lucide-react"
-import { formatCurrency } from "@/lib/core/utils"
+import { formatMoneyAmount } from "@/lib/core/utils"
 
 const movementMap = {
   [TransactionType.CASH_IN]: {
@@ -50,7 +50,7 @@ export function MovementItem({
         </div>
       </div>
       <span className={`text-sm font-semibold ${amountClasses}`}>
-        {formatCurrency(amountText, currency)}
+        {formatMoneyAmount(amountText, { currency })}
       </span>
     </div>
   )

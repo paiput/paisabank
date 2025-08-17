@@ -2,6 +2,7 @@
 
 import { Issuer } from "@/generated/prisma"
 import { CardResponse } from "@/lib/cards/types"
+import { formatMoneyAmount } from "@/lib/core/utils"
 import { format } from "date-fns"
 import Image from "next/image"
 
@@ -11,7 +12,7 @@ interface CardComponentProps {
 
 export function CardComponent({ card }: CardComponentProps) {
   const formatLastDigits = (digits: number) => {
-    return `**** **** **** ${digits.toString().padStart(4, "0")}`
+    return `**** **** **** ${digits.toString()}`
   }
 
   const getCardGradient = (issuer: string) => {
@@ -48,26 +49,21 @@ export function CardComponent({ card }: CardComponentProps) {
   return (
     <div className="relative w-full max-w-md">
       <div
-        className={`relative aspect-[1.58] overflow-hidden rounded-3xl bg-gradient-to-br ${getCardGradient(card.issuer)} p-4 text-white`}
+        className={`relative flex aspect-[1.6] flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br ${getCardGradient(card.issuer)} p-4 text-white`}
       >
-        <div className="mb-4">
+        <div>
           <div className="flex items-center">
-            <p className="text-xs/4 opacity-80">Balance</p>
+            <p className="text-sm opacity-80">Balance</p>
             <span className="ml-auto">{getIssuerLogo(card.issuer)}</span>
           </div>
-          <div>
-            <p className="mt-1 flex items-center gap-2">
-              <span className="rounded-md bg-white/20 px-2 py-1 text-[10px] font-medium">
-                {card.currency}
-              </span>
-              {Number(card.balance).toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </p>
-          </div>
+          <p className="flex items-center gap-2">
+            <span className="rounded-md bg-white/20 px-2 py-1 text-[10px] font-medium">
+              {card.currency}
+            </span>
+            {formatMoneyAmount(card.balance)}
+          </p>
         </div>
-        <p className="mb-4 text-lg tracking-widest">
+        <p className="text-lg tracking-widest">
           {formatLastDigits(card.lastDigits)}
         </p>
         <div className="flex items-end justify-between text-xs opacity-90">
