@@ -16,7 +16,7 @@ import { MovementItem } from "@/lib/movements/components/movement"
 
 export default function Home() {
   const session = useSession()
-  const { cards, loading, error } = useCards(session?.userId ?? 0)
+  const { cards, loading, error } = useCards()
 
   const [movements, setMovements] = useState<Transaction[]>([])
 

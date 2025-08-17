@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
+import { withAuth } from "@/lib/auth/api-middleware"
 import * as cardService from "@/lib/cards/services"
 
 // TODO: Add Schema
 
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
-    // TODO: Get userId from authentication/session
-    const searchParams = request.nextUrl.searchParams
-    const userId = searchParams.get("userId")
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 },
-      )
-    }
-
-    const cards = await cardService.getUserCards(parseInt(userId))
+    const cards = await cardService.getUserCards(session.userId)
 
     return NextResponse.json({
       success: true,
@@ -32,4 +22,4 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     )
   }
-}
+})

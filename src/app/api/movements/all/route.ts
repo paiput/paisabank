@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSession } from "@/lib/auth/services"
+import { withAuth } from "@/lib/auth/api-middleware"
 import { getMovements } from "@/lib/movements/services"
 import { TransactionType, Currency, Issuer } from "@/generated/prisma"
 
 // TODO: Add Schema
 
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest, session) => {
   try {
-    // TODO: Remove session verification and use auth middleware
-    const session = await getSession()
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { searchParams } = new URL(request.url)
     const search = searchParams.get("search") || ""
     const type = searchParams.get("type") as TransactionType | null
@@ -58,4 +52,4 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     )
   }
-}
+})

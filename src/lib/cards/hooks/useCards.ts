@@ -7,28 +7,23 @@ interface UseCardsReturn {
   cards: CardResponse[]
   loading: boolean
   error: string | null
-  fetchCards: (userId: number) => Promise<void>
-  addCard: (
-    userId: number,
-    cardData: CreateCardRequest,
-  ) => Promise<CardResponse | null>
+  fetchCards: () => Promise<void>
+  addCard: (cardData: CreateCardRequest) => Promise<CardResponse | null>
   deleteCard: (cardId: number) => Promise<void>
   refreshCards: () => Promise<void>
 }
 
-export function useCards(userId?: number): UseCardsReturn {
+export function useCards(): UseCardsReturn {
   const [cards, setCards] = useState<CardResponse[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [currentUserId, setCurrentUserId] = useState<number | undefined>(userId)
 
-  const fetchCards = useCallback(async (fetchUserId: number) => {
+  const fetchCards = useCallback(async () => {
     setLoading(true)
     setError(null)
-    setCurrentUserId(fetchUserId)
 
     try {
-      const response = await fetch(`/api/cards?userId=${fetchUserId}`)
+      const response = await fetch("/api/cards")
       const data = await response.json()
 
       if (!response.ok) {
@@ -47,10 +42,7 @@ export function useCards(userId?: number): UseCardsReturn {
   }, [])
 
   const addCard = useCallback(
-    async (
-      addUserId: number,
-      cardData: CreateCardRequest,
-    ): Promise<CardResponse | null> => {
+    async (cardData: CreateCardRequest): Promise<CardResponse | null> => {
       setLoading(true)
       setError(null)
 
@@ -60,10 +52,7 @@ export function useCards(userId?: number): UseCardsReturn {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            userId: addUserId,
-            ...cardData,
-          }),
+          body: JSON.stringify(cardData),
         })
 
         const data = await response.json()
@@ -119,16 +108,12 @@ export function useCards(userId?: number): UseCardsReturn {
   }, [])
 
   const refreshCards = useCallback(async () => {
-    if (currentUserId) {
-      await fetchCards(currentUserId)
-    }
-  }, [currentUserId, fetchCards])
+    await fetchCards()
+  }, [fetchCards])
 
   useEffect(() => {
-    if (userId) {
-      fetchCards(userId)
-    }
-  }, [userId, fetchCards])
+    fetchCards()
+  }, [fetchCards])
 
   return {
     cards,

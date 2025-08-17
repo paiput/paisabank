@@ -1,12 +1,22 @@
-import { getCurrentUser } from "@/lib/auth/services"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import { withAuth } from "@/lib/auth/api-middleware"
+import { prisma } from "@/prisma/client"
 
-export async function GET() {
+export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
-    const user = await getCurrentUser()
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    })
 
     if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -23,4 +33,4 @@ export async function GET() {
       { status: 500 },
     )
   }
-}
+})

@@ -1,15 +1,12 @@
-import { getSession } from "@/lib/auth/services"
+import { withAuth } from "@/lib/auth/api-middleware"
 import { getMovements } from "@/lib/movements/services"
 import { NextRequest, NextResponse } from "next/server"
 
 // TODO: Add Schema
 
-export async function GET(_request: NextRequest) {
-  // TODO: Remove session verification and use auth middleware
-  const session = await getSession()
-
+export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
-    const movements = await getMovements(session?.userId ?? 0, {}, { limit: 5 })
+    const movements = await getMovements(session.userId, {}, { limit: 5 })
     return NextResponse.json({
       success: true,
       data: movements,
@@ -25,4 +22,4 @@ export async function GET(_request: NextRequest) {
       { status: 500 },
     )
   }
-}
+})
