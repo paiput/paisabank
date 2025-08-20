@@ -4,6 +4,10 @@ import { prisma } from "@/prisma/client"
 export async function getMovements(
   userId: number,
   filters: {
+    title?: {
+      contains?: string
+      mode?: "insensitive"
+    }
     startDate?: Date
     endDate?: Date
     type?: TransactionType
@@ -24,5 +28,8 @@ export async function getMovements(
     },
     take: config.limit,
     skip: config.offset,
+    orderBy: {
+      createdAt: "desc",
+    },
   })
 }

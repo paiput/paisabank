@@ -71,7 +71,7 @@ export function useMovements(
           throw new Error(data.error || "Failed to fetch movements")
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred")
+        setError(err instanceof Error ? err.message : "Hubo un error")
         setMovements([])
       } finally {
         setLoading(false)

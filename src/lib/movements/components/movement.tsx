@@ -4,13 +4,13 @@ import { formatMoneyAmount } from "@/lib/core/utils"
 
 const movementMap = {
   [TransactionType.CASH_IN]: {
-    icon: <Upload className="h-5 w-5" />,
+    icon: <Download className="h-5 w-5" />,
     iconClasses: "text-emerald-500 bg-emerald-100",
     subtitle: "Pago recibido",
     amountClasses: "text-green-600",
   },
   [TransactionType.CASH_OUT]: {
-    icon: <Download className="h-5 w-5" />,
+    icon: <Upload className="h-5 w-5" />,
     iconClasses: "text-orange-500 bg-orange-100",
     subtitle: "Pago enviado",
     amountClasses: "text-red-500",

@@ -69,4 +69,8 @@ model Transaction {
 
   cardId Int
   card   Card @relation(fields: [cardId], references: [id])
+
+  @@index([cardId, type])
+  @@index([cardId, currency])
+  @@index([title])
 }
