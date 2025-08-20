@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Inter, Poppins } from "next/font/google"
 import "@/app/styles/globals.css"
 import { Toaster } from "@/lib/layout/components/ui/sonner"
-import { Footer } from "@/lib/layout/components/footer"
+import { NavMenuLayout } from "@/lib/layout/components/nav-menu"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,8 +28,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.className} ${poppins.className} antialiased`}>
-        {children}
-        <Footer />
+        <NavMenuLayout>{children}</NavMenuLayout>
         <Toaster />
       </body>
     </html>

@@ -1,20 +1,21 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { CardResponse, CreateCardRequest } from "@/lib/cards/types"
+import { CreateCardRequest } from "@/lib/cards/types"
+import { Card } from "@/generated/prisma"
 
 interface UseCardsReturn {
-  cards: CardResponse[]
+  cards: Card[]
   loading: boolean
   error: string | null
   fetchCards: () => Promise<void>
-  addCard: (cardData: CreateCardRequest) => Promise<CardResponse | null>
+  addCard: (cardData: CreateCardRequest) => Promise<Card | null>
   deleteCard: (cardId: number) => Promise<void>
   refreshCards: () => Promise<void>
 }
 
 export function useCards(): UseCardsReturn {
-  const [cards, setCards] = useState<CardResponse[]>([])
+  const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -42,7 +43,7 @@ export function useCards(): UseCardsReturn {
   }, [])
 
   const addCard = useCallback(
-    async (cardData: CreateCardRequest): Promise<CardResponse | null> => {
+    async (cardData: CreateCardRequest): Promise<Card | null> => {
       setLoading(true)
       setError(null)
 

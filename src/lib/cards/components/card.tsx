@@ -1,13 +1,12 @@
 "use client"
 
-import { Issuer } from "@/generated/prisma"
-import { CardResponse } from "@/lib/cards/types"
+import { Card, Issuer } from "@/generated/prisma"
 import { formatMoneyAmount } from "@/lib/core/utils"
 import { format } from "date-fns"
 import Image from "next/image"
 
 interface CardComponentProps {
-  card: CardResponse
+  card: Card
 }
 
 export function CardComponent({ card }: CardComponentProps) {
@@ -47,7 +46,7 @@ export function CardComponent({ card }: CardComponentProps) {
   }
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-sm">
       <div
         className={`relative flex aspect-[1.6] flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br ${getCardGradient(card.issuer)} p-4 text-white`}
       >

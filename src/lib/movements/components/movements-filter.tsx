@@ -71,7 +71,7 @@ export function MovementsFilter({
           placeholder="Ingresa un nombre o servicio"
         />
       </div>
-      <div className="flex gap-2 overflow-x-scroll">
+      <div className="flex gap-2 overflow-x-scroll md:overflow-x-auto">
         {movementTypeFilterOptions.map((filter) => {
           return (
             <div key={filter.label}>
