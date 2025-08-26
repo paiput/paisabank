@@ -1,4 +1,4 @@
-import { Currency, Issuer, TransactionType } from "@/generated/prisma"
+import { Currency, Issuer, TransactionType } from "@prisma/client"
 import { prisma } from "@/prisma/client"
 
 export async function getMovements(

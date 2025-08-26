@@ -1,4 +1,4 @@
-import { TransactionType } from "@/generated/prisma"
+import { TransactionType } from "@prisma/client"
 
 const movementTypeFilterLabels: Record<TransactionType, string> = {
   [TransactionType.CASH_IN]: "Ingreso",

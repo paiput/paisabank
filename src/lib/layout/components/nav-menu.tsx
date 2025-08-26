@@ -4,6 +4,7 @@ import { HomeIcon, FileText, LogOutIcon } from "lucide-react"
 import Link from "next/link"
 import { logout } from "@/lib/auth/services"
 import { usePathname } from "next/navigation"
+import Image from "next/image"
 
 const navMenuItems = [
   {
@@ -19,15 +20,24 @@ const navMenuItems = [
 ]
 
 interface NavMenuProps {
-  items: typeof navMenuItems
   currentPath: string
 }
 
-function AsideNavMenu({ items, currentPath }: NavMenuProps) {
+function AsideNavMenu({ currentPath }: NavMenuProps) {
   return (
-    <aside className="hidden h-screen w-full max-w-2xs bg-blue-700 text-white md:fixed md:block">
+    <aside className="hidden h-screen w-full max-w-2xs border-r md:fixed md:block">
+      <div className="mt-6 flex items-center gap-2 px-6 select-none">
+        <Image
+          src="/paisabank-logo.svg"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="w-10"
+        />
+        <p className="text-xl font-medium">Paisabank</p>
+      </div>
       <nav className="pointer-events-auto space-y-4 p-6">
-        {items.map((item) => (
+        {navMenuItems.map((item) => (
           <Link
             href={item.href}
             key={item.href}
@@ -49,12 +59,12 @@ function AsideNavMenu({ items, currentPath }: NavMenuProps) {
   )
 }
 
-function FooterNavMenu({ items, currentPath }: NavMenuProps) {
+function FooterNavMenu({ currentPath }: NavMenuProps) {
   return (
     <footer className="mt-18 md:hidden">
       <nav className="fixed inset-x-0 bottom-0 z-10 mx-auto w-full">
         <div className="mx-auto flex h-18 items-center justify-around rounded-t-2xl border bg-white shadow-xl">
-          {items.map((item) => (
+          {navMenuItems.map((item) => (
             <Link
               href={item.href}
               key={item.href}
@@ -77,9 +87,9 @@ export function NavMenuLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="md:flex">
-      <AsideNavMenu items={navMenuItems} currentPath={pathname} />
+      <AsideNavMenu currentPath={pathname} />
       <div className="w-full md:ml-[18rem]">{children}</div>
-      <FooterNavMenu items={navMenuItems} currentPath={pathname} />
+      <FooterNavMenu currentPath={pathname} />
     </div>
   )
 }

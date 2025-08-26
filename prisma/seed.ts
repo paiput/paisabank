@@ -1,10 +1,5 @@
 import { faker } from "@faker-js/faker"
-import {
-  PrismaClient,
-  Issuer,
-  Currency,
-  TransactionType,
-} from "../src/generated/prisma"
+import { PrismaClient, Issuer, Currency, TransactionType } from "@prisma/client"
 import bcrypt from "bcrypt"
 
 const prisma = new PrismaClient()

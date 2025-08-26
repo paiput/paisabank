@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { CreateCardRequest } from "@/lib/cards/types"
-import { Card } from "@/generated/prisma"
+import { Card } from "@prisma/client"
 
 interface UseCardsReturn {
   cards: Card[]

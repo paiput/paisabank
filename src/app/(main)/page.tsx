@@ -11,7 +11,7 @@ import {
 import { useCards } from "@/lib/cards/hooks/useCards"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Transaction } from "@/generated/prisma"
+import { Transaction } from "@prisma/client"
 import { MovementItem } from "@/lib/movements/components/movement"
 import { CardsCarousel } from "@/lib/cards/components/cards-carousel"
 import { Button } from "@/lib/layout/components/ui/button"
@@ -60,7 +60,7 @@ export default function Home() {
 
       <section className="mt-4 mb-2 flex justify-end px-6">
         <Button
-          className="bg-white shadow-[0_1px_5px_rgba(0,0,0,0.1)]"
+          className="cursor-pointer bg-white shadow-[0_1px_5px_rgba(0,0,0,0.1)] hover:bg-white"
           onClick={() => setHideBalance(!hideBalance)}
         >
           {hideBalance ? (

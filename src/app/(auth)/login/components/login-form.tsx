@@ -6,6 +6,7 @@ import { Label } from "@/lib/layout/components/ui/label"
 import { toast } from "sonner"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { Checkbox } from "@/lib/layout/components/ui/checkbox"
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -33,8 +34,6 @@ export function LoginForm() {
       if (!res.ok) {
         throw new Error(data.message || "Error al iniciar sesión")
       }
-
-      toast.success("¡Bienvenido! Iniciando sesión...")
 
       router.push("/")
       // Refresh to update auth state
@@ -78,10 +77,7 @@ export function LoginForm() {
       </div>
 
       <label className="text-foreground/70 flex items-center gap-3 text-[15px]">
-        <input
-          type="checkbox"
-          className="border-input size-5 rounded-md border accent-[#0A5BFF]"
-        />
+        <Checkbox className="size-5 data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white" />
         <span>Recordarme</span>
       </label>
 

@@ -1,5 +1,5 @@
 import { CreateCardRequest } from "@/lib/cards/types"
-import { Issuer, Currency } from "@/generated/prisma"
+import { Issuer, Currency } from "@prisma/client"
 import { prisma } from "@/prisma/client"
 
 export async function getUserCards(userId: number) {

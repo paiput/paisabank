@@ -6,7 +6,7 @@ import { useEffect, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { Input } from "@/lib/layout/components/ui/input"
 import { Label } from "@/lib/layout/components/ui/label"
-import { TransactionType } from "@/generated/prisma"
+import { TransactionType } from "@prisma/client"
 import { useDebounce } from "use-debounce"
 
 type FilterFormData = {

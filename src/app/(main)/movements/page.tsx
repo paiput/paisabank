@@ -5,7 +5,7 @@ import { MovementItem } from "@/lib/movements/components/movement"
 import { useMovements } from "@/lib/movements/hooks/useMovements"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
-import { TransactionType } from "@/generated/prisma"
+import { TransactionType } from "@prisma/client"
 
 export default function Movements() {
   const [filters, setFilters] = useState<{

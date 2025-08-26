@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { TransactionType, Currency, Issuer } from "@/generated/prisma"
+import { TransactionType, Currency, Issuer } from "@prisma/client"
 
 interface MovementFilters {
   search?: string

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "@/lib/auth/api-middleware"
 import { getMovements } from "@/lib/movements/services"
-import { TransactionType, Currency, Issuer } from "@/generated/prisma"
-
-// TODO: Add Schema
+import { TransactionType, Currency, Issuer } from "@prisma/client"
 
 export const GET = withAuth(async (request: NextRequest, session) => {
   try {
@@ -20,7 +18,6 @@ export const GET = withAuth(async (request: NextRequest, session) => {
     if (currency) filters.currency = currency
     if (issuer) filters.issuer = issuer
 
-    // Add search functionality (search in title)
     if (search.trim()) {
       filters.title = {
         contains: search.trim(),

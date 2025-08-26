@@ -6,8 +6,6 @@ import bcrypt from "bcrypt"
 import { SignJWT, jwtVerify } from "jose"
 import { redirect } from "next/navigation"
 
-// TODO: Review cast to SessionPayload
-
 export interface SessionPayload {
   userId: number
   email: string
@@ -24,12 +22,9 @@ const getJwtSecret = () => {
 }
 
 // Session duration (7 days)
-const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000
 
-export async function createSession(
-  userId: number,
-  email: string,
-): Promise<string> {
+async function createSession(userId: number, email: string): Promise<string> {
   const payload = {
     userId,
     email,
@@ -95,34 +90,6 @@ export async function login(email: string, password: string) {
 export async function logout() {
   ;(await cookies()).delete("session")
   redirect("/login")
-}
-
-// TODO: Should be deleted and use a middleware instead
-export async function getCurrentUser() {
-  const session = await getSession()
-
-  if (!session) {
-    return null
-  }
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: session.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-        updatedAt: true,
-        // Exclude password
-      },
-    })
-
-    return user
-  } catch (error) {
-    console.error("Failed to get current user:", error)
-    return null
-  }
 }
 
 export async function verifySession(

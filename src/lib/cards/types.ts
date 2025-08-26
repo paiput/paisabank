@@ -1,4 +1,4 @@
-import { Issuer, Currency } from "@/generated/prisma"
+import { Issuer, Currency } from "@prisma/client"
 
 export interface CardCreateData {
   cardNumber: string

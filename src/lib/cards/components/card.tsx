@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, Issuer } from "@/generated/prisma"
+import { Card, Issuer } from "@prisma/client"
 import { formatMoneyAmount } from "@/lib/core/utils"
 import { format } from "date-fns"
 import Image from "next/image"
@@ -17,11 +17,11 @@ export function CardComponent({ card }: CardComponentProps) {
     return `**** **** **** ${digits.toString()}`
   }
 
-  const getCardGradient = (issuer: string) => {
+  const getCardGradient = (issuer: Issuer) => {
     switch (issuer) {
-      case "VISA":
+      case Issuer.VISA:
         return "from-blue-600 to-blue-800"
-      case "MASTERCARD":
+      case Issuer.MASTERCARD:
         return "from-red-800 to-red-600"
       default:
         return "from-gray-600 to-gray-700"
@@ -49,7 +49,7 @@ export function CardComponent({ card }: CardComponentProps) {
   }
 
   return (
-    <div className="relative w-full max-w-sm">
+    <div className="relative w-full max-w-sm md:min-w-sm">
       <div
         className={`relative flex aspect-[1.6] flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br ${getCardGradient(card.issuer)} p-4 text-white`}
       >
@@ -63,7 +63,7 @@ export function CardComponent({ card }: CardComponentProps) {
               {card.currency}
             </span>
             <span className="text-xl font-semibold">
-              {hideBalance ? "****" : formatMoneyAmount(card.balance)}
+              {hideBalance ? "****" : formatMoneyAmount(card.balance.toString())}
             </span>
           </p>
         </div>

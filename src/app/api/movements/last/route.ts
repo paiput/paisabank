@@ -2,8 +2,6 @@ import { withAuth } from "@/lib/auth/api-middleware"
 import { getMovements } from "@/lib/movements/services"
 import { NextRequest, NextResponse } from "next/server"
 
-// TODO: Add Schema
-
 export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
     const movements = await getMovements(session.userId, {}, { limit: 5 })

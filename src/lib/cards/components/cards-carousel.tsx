@@ -6,7 +6,7 @@ import {
   CarouselItem,
 } from "@/lib/layout/components/ui/carousel"
 import { CardComponent } from "./card"
-import { Card } from "@/generated/prisma"
+import { Card } from "@prisma/client"
 import { useState } from "react"
 
 export function CardsCarousel({
@@ -67,10 +67,10 @@ export function CardsCarousel({
         </Carousel>
       </div>
 
-      {/* Desktop: Flex Grid */}
-      <div className="hidden md:flex md:flex-wrap md:gap-6">
+      {/* Desktop: Flex */}
+      <div className="hidden w-fit overflow-x-scroll md:flex md:gap-6">
         {cards.map((card) => (
-          <div key={card.id} className="max-w-sm min-w-0 flex-1">
+          <div key={card.id} className="max-w-sm flex-1">
             <CardComponent card={card} />
           </div>
         ))}

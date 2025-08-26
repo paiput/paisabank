@@ -1,4 +1,4 @@
-import { Currency, TransactionType } from "@/generated/prisma"
+import { Currency, TransactionType } from "@prisma/client"
 import { Upload, Download, Repeat } from "lucide-react"
 import { formatMoneyAmount } from "@/lib/core/utils"
 

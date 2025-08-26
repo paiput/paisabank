@@ -1,11 +1,10 @@
-import { Currency } from "@/generated/prisma"
-import { Decimal } from "@/generated/prisma/runtime/index-browser"
+import { Currency } from "@prisma/client"
 
 export function formatMoneyAmount(
-  amount: number | string | Decimal,
+  amount: number | string,
   { currency }: { currency?: Currency } = {},
 ) {
-  if (typeof amount === "string" || amount instanceof Decimal) {
+  if (typeof amount === "string") {
     amount = Number(amount)
     if (isNaN(amount)) {
       throw new Error("Invalid amount")
