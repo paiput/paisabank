@@ -1,18 +1,27 @@
 "use client"
 
-import { Bell, Search } from "lucide-react"
+import {
+  BellIcon,
+  DownloadIcon,
+  EyeIcon,
+  EyeOffIcon,
+  SearchIcon,
+  UploadIcon,
+} from "lucide-react"
 import { useCards } from "@/lib/cards/hooks/useCards"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Transaction } from "@/generated/prisma"
 import { MovementItem } from "@/lib/movements/components/movement"
-import { AddCardForm } from "@/lib/cards/components/add-card-form"
 import { CardsCarousel } from "@/lib/cards/components/cards-carousel"
+import { Button } from "@/lib/layout/components/ui/button"
+import { useLocalStorage } from "usehooks-ts"
 
 export default function Home() {
   const { cards, loading, error } = useCards()
 
   const [movements, setMovements] = useState<Transaction[]>([])
+  const [hideBalance, setHideBalance] = useLocalStorage("hideBalance", false)
 
   useEffect(() => {
     const fetchMovements = async () => {
@@ -24,7 +33,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="mx-auto border-2">
+    <main className="mx-auto">
       {/* TODO: Move to a layout component */}
       {/* Header */}
       <header className="mb-4 flex items-start justify-between px-6 pt-6">
@@ -38,24 +47,48 @@ export default function Home() {
             href="/movements"
             className="rounded-full border bg-white p-2 shadow-sm"
           >
-            <Search className="h-5 w-5" />
+            <SearchIcon className="h-5 w-5" />
           </Link>
           <button
             aria-label="Notificaciones"
             className="rounded-full border bg-white p-2 shadow-sm"
           >
-            <Bell className="h-5 w-5" />
+            <BellIcon className="h-5 w-5" />
           </button>
         </div>
       </header>
 
+      <section className="mt-4 mb-2 flex justify-end px-6">
+        <Button
+          className="bg-white shadow-[0_1px_5px_rgba(0,0,0,0.1)]"
+          onClick={() => setHideBalance(!hideBalance)}
+        >
+          {hideBalance ? (
+            <EyeOffIcon className="text-black" />
+          ) : (
+            <EyeIcon className="text-black" />
+          )}
+        </Button>
+      </section>
+
       {/* Cards */}
-      <section className="px-6">
+      <section className="md:px-6">
         <CardsCarousel cards={cards} loading={loading} error={error} />
       </section>
 
+      <section className="my-4 grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-4 px-6">
+        <Button className="min-w-max px-4 py-8" variant="secondary">
+          <DownloadIcon className="size-4" />
+          Recibir dinero
+        </Button>
+        <Button className="min-w-max px-4 py-8" variant="secondary">
+          <UploadIcon className="size-4" />
+          Enviar dinero
+        </Button>
+      </section>
+
       {/* Recent movements */}
-      <section className="px-6 pt-6">
+      <section className="px-6 py-6">
         <h2 className="mb-3 text-xl font-semibold">Últimos movimientos</h2>
         <div className="space-y-4">
           {movements.map((movement) => (

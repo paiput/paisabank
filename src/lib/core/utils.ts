@@ -12,8 +12,14 @@ export function formatMoneyAmount(
     }
   }
 
+  const narrowSymbolCurrencies: Currency[] = [Currency.ARS, Currency.EUR]
+
   return new Intl.NumberFormat("es-AR", {
     style: currency ? "currency" : "decimal",
     currency: currency,
+    currencyDisplay:
+      currency && narrowSymbolCurrencies.includes(currency)
+        ? "narrowSymbol"
+        : "symbol",
   }).format(amount)
 }

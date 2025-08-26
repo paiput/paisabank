@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Carousel,
   CarouselContent,
@@ -5,6 +7,7 @@ import {
 } from "@/lib/layout/components/ui/carousel"
 import { CardComponent } from "./card"
 import { Card } from "@/generated/prisma"
+import { useState } from "react"
 
 export function CardsCarousel({
   cards,
@@ -15,6 +18,8 @@ export function CardsCarousel({
   loading: boolean
   error: string | null
 }) {
+  const [touchedCard, setTouchedCard] = useState<number | null>(null)
+
   if (loading) {
     return (
       <div className="mb-8 text-center">
@@ -41,7 +46,13 @@ export function CardsCarousel({
               <CarouselItem
                 key={card.id}
                 index={index}
-                className={`${
+                onTouchStart={() => {
+                  setTouchedCard(index)
+                }}
+                onTouchEnd={() => {
+                  setTouchedCard(null)
+                }}
+                className={`${touchedCard === index && "scale-95"} ${
                   index === 0
                     ? "basis-5/6 pr-2 pl-6"
                     : index === cards.length - 1

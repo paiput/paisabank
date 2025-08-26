@@ -59,7 +59,7 @@ export function MovementsFilter({
 
   return (
     <div className="my-4 space-y-4">
-      <div className="flex items-center gap-2 rounded-md border border-gray-200 p-2 px-4">
+      <div className="flex items-center gap-2 rounded-xl border border-gray-200 p-2 px-4 shadow-2xl shadow-gray-200">
         {isPending ? (
           <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
         ) : (
@@ -85,7 +85,7 @@ export function MovementsFilter({
               />
               <Label
                 htmlFor={filter.label}
-                className="cursor-pointer rounded-lg border px-4 py-2 peer-checked:bg-zinc-700 peer-checked:text-white"
+                className="cursor-pointer rounded-xl border px-4 py-3 peer-checked:bg-zinc-700 peer-checked:text-white"
               >
                 {filter.label}
               </Label>

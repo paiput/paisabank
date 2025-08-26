@@ -4,12 +4,15 @@ import { Card, Issuer } from "@/generated/prisma"
 import { formatMoneyAmount } from "@/lib/core/utils"
 import { format } from "date-fns"
 import Image from "next/image"
+import { useLocalStorage } from "usehooks-ts"
 
 interface CardComponentProps {
   card: Card
 }
 
 export function CardComponent({ card }: CardComponentProps) {
+  const [hideBalance] = useLocalStorage("hideBalance", false)
+
   const formatLastDigits = (digits: number) => {
     return `**** **** **** ${digits.toString()}`
   }
@@ -17,9 +20,9 @@ export function CardComponent({ card }: CardComponentProps) {
   const getCardGradient = (issuer: string) => {
     switch (issuer) {
       case "VISA":
-        return "from-blue-600 to-blue-700"
+        return "from-blue-600 to-blue-800"
       case "MASTERCARD":
-        return "from-red-600 to-red-700"
+        return "from-red-800 to-red-600"
       default:
         return "from-gray-600 to-gray-700"
     }
@@ -59,7 +62,9 @@ export function CardComponent({ card }: CardComponentProps) {
             <span className="rounded-md bg-white/20 px-2 py-1 text-[10px] font-medium">
               {card.currency}
             </span>
-            {formatMoneyAmount(card.balance)}
+            <span className="text-xl font-semibold">
+              {hideBalance ? "****" : formatMoneyAmount(card.balance)}
+            </span>
           </p>
         </div>
         <p className="text-lg tracking-widest">
