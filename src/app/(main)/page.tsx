@@ -72,14 +72,16 @@ export default function Home() {
       </section>
 
       <section className="my-4 grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-4 px-6">
-        <Button className="min-w-max px-4 py-8" variant="secondary" onClick={onBtnClick}>
+        <Button className="min-w-max px-4 py-8 bg-blue-100 hover:bg-blue-100" variant="secondary" onClick={onBtnClick}>
           <DownloadIcon className="size-4" />
           Recibir dinero
         </Button>
-        <Button className="min-w-max px-4 py-8" variant="secondary" onClick={onBtnClick}>
+        <Link href="/send-money" className="min-w-max px-4 py-8 text-blue-600 font-medium bg-blue-100 rounded-lg h-12 flex items-center justify-center gap-2">
           <UploadIcon className="size-4" />
-          Enviar dinero
-        </Button>
+          <span>
+            Enviar dinero
+          </span>
+        </Link>
       </section>
 
       {/* Recent movements */}
