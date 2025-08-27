@@ -3,22 +3,37 @@
 import { Button } from "@/lib/layout/components/ui/button"
 import { Input } from "@/lib/layout/components/ui/input"
 import { Label } from "@/lib/layout/components/ui/label"
-import { toast } from "sonner"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Checkbox } from "@/lib/layout/components/ui/checkbox"
+import { useForm } from "react-hook-form"
+
+type LoginFormData = {
+  email: string
+  password: string
+  rememberMe: boolean
+}
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  })
 
-    const formData = new FormData(e.target as HTMLFormElement)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true)
+    setError(null) // Clear any previous errors
 
     try {
       const res = await fetch("/api/login", {
@@ -26,13 +41,16 @@ export function LoginForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password
+        }),
       })
 
-      const data = await res.json()
+      const responseData = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.message || "Error al iniciar sesión")
+        throw new Error(responseData.message || "Error al iniciar sesión")
       }
 
       router.push("/")
@@ -40,8 +58,8 @@ export function LoginForm() {
       router.refresh()
     } catch (error) {
       console.error("Login error:", error)
-      toast.error(
-        error instanceof Error ? error.message : "Error al iniciar sesión",
+      setError(
+        error instanceof Error ? error.message : "Error al iniciar sesión"
       )
     } finally {
       setIsLoading(false)
@@ -49,7 +67,7 @@ export function LoginForm() {
   }
 
   return (
-    <form className="mt-10 space-y-5" onSubmit={handleSubmit}>
+    <form className="mt-10 space-y-5" onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <Label htmlFor="email" className="text-foreground/80 text-[15px]">
           Email
@@ -57,10 +75,19 @@ export function LoginForm() {
         <Input
           id="email"
           type="email"
-          name="email"
           placeholder="Ingresa tu email"
           className="h-12 rounded-xl bg-white shadow-[0_20px_40px_-24px_rgba(0,0,0,0.35)]"
+          {...register("email", {
+            required: "El email es requerido",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "Email inválido"
+            }
+          })}
         />
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -70,16 +97,34 @@ export function LoginForm() {
         <Input
           id="password"
           type="password"
-          name="password"
           placeholder="Ingresa tu contraseña"
           className="h-12 rounded-xl bg-white shadow-[0_20px_40px_-24px_rgba(0,0,0,0.35)]"
+          {...register("password", {
+            required: "La contraseña es requerida",
+            minLength: {
+              value: 6,
+              message: "La contraseña debe tener al menos 6 caracteres"
+            }
+          })}
         />
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
       </div>
 
       <label className="text-foreground/70 flex items-center gap-3 text-[15px]">
-        <Checkbox className="size-5 data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white" />
+        <Checkbox
+          className="size-5 data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
+          {...register("rememberMe")}
+        />
         <span>Recordarme</span>
       </label>
+
+      {error && (
+        <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+          <p className="text-red-800 text-sm font-medium">{error}</p>
+        </div>
+      )}
 
       <Button
         type="submit"

@@ -11,6 +11,9 @@ export const GET = withAuth(async (_request: NextRequest, session) => {
         },
       },
       take: 5,
+      orderBy: {
+        createdAt: "desc",
+      },
     })
     return NextResponse.json({
       success: true,

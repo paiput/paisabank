@@ -10,6 +10,7 @@ interface MovementFilters {
   issuer?: Issuer
   page?: number
   limit?: number
+  last?: boolean
 }
 
 interface Movement {
@@ -53,7 +54,9 @@ export function useMovements(
         if (filters.page) params.set("page", filters.page.toString())
         if (filters.limit) params.set("limit", filters.limit.toString())
 
-        const response = await fetch(`/api/movements/all?${params.toString()}`)
+        const endpoint = filters.last ? "last" : "all"
+
+        const response = await fetch(`/api/movements/${endpoint}?${params.toString()}`)
 
         if (!response.ok) {
           throw new Error("Failed to fetch movements")

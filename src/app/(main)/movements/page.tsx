@@ -29,7 +29,7 @@ export default function Movements() {
   }
 
   return (
-    <main className="mx-auto">
+    <main className="mx-auto pb-4">
       <section className="px-6 pt-6">
         <h2 className="mb-3 text-xl font-semibold">Movimientos</h2>
         <MovementsFilter

@@ -40,15 +40,13 @@ export async function POST(request: NextRequest) {
       throw new Error("Invalid email or password")
     }
 
-    await createSession(user.id, user.email)
+    const token = await createSession(user.id, user.email)
 
     return NextResponse.json({
       success: true,
-      message: "Login successful",
-      user: {
-        id: user.id,
-        email: user.email,
+      data: {
         name: user.name,
+        token,
       },
     })
   } catch (error) {

@@ -7,7 +7,8 @@ export const GET = withAuth(async (request: NextRequest, session) => {
   try {
     const { searchParams } = new URL(request.url)
     const search = searchParams.get("search")
-    const type = searchParams.get("type") as TransactionType | null
+    const type = (searchParams.get("type") ||
+      searchParams.get("filter")) as TransactionType | null
     const currency = searchParams.get("currency") as Currency | null
     const issuer = searchParams.get("issuer") as Issuer | null
     const page = parseInt(searchParams.get("page") || "1")
@@ -19,7 +20,10 @@ export const GET = withAuth(async (request: NextRequest, session) => {
           userId: session.userId,
           issuer: issuer ?? undefined,
         },
-        title: search?.trim() || undefined,
+        title: {
+          contains: search?.trim().toLowerCase() || undefined,
+          mode: 'insensitive'
+        },
         type: type ?? undefined,
         currency: currency ?? undefined,
       },
