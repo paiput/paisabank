@@ -59,19 +59,21 @@ export function MovementsFilter({
 
   return (
     <div className="my-4 space-y-4">
-      <div className="flex items-center gap-2 rounded-xl border border-gray-200 p-2 px-4 shadow-2xl shadow-gray-200">
-        {isPending ? (
-          <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-        ) : (
-          <Search className="text-muted-foreground h-4 w-4" />
-        )}
-        <Input
-          {...register("search")}
-          className="w-full border-none shadow-none outline-0 focus-visible:ring-0 focus-visible:outline-none"
-          placeholder="Ingresa un nombre o servicio"
-        />
+      <div className="px-6 md:px-0">
+        <div className="flex items-center gap-2 rounded-xl border border-gray-200 p-2 px-4 shadow-2xl shadow-gray-200">
+          {isPending ? (
+            <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+          ) : (
+            <Search className="text-muted-foreground h-4 w-4" />
+          )}
+          <Input
+            {...register("search")}
+            className="w-full border-none shadow-none outline-0 focus-visible:ring-0 focus-visible:outline-none"
+            placeholder="Ingresa un nombre o servicio"
+          />
+        </div>
       </div>
-      <div className="flex gap-2 overflow-x-scroll md:overflow-x-auto">
+      <div className="flex gap-2 overflow-x-scroll md:overflow-x-auto px-6 md:px-0">
         {movementTypeFilterOptions.map((filter) => {
           return (
             <div key={filter.label}>

@@ -30,14 +30,14 @@ export default function Movements() {
 
   return (
     <main className="mx-auto pb-4">
-      <section className="px-6 pt-6">
-        <h2 className="mb-3 text-xl font-semibold">Movimientos</h2>
+      <section className="md:px-6 pt-6">
+        <h2 className="px-6 md:px-0 mb-3 text-xl font-semibold">Movimientos</h2>
         <MovementsFilter
           onSubmit={(filterData) => {
             setFilters(filterData)
           }}
         />
-        <div className="space-y-4">
+        <div className="px-6 md:px-0 space-y-4">
           {loading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin" />
