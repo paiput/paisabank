@@ -1,8 +1,6 @@
 "use server"
 
-import { prisma } from "@/prisma/client"
 import { cookies } from "next/headers"
-import bcrypt from "bcrypt"
 import { SignJWT, jwtVerify } from "jose"
 import { redirect } from "next/navigation"
 
@@ -24,7 +22,10 @@ const getJwtSecret = () => {
 // Session duration (7 days)
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000
 
-async function createSession(userId: number, email: string): Promise<string> {
+export async function createSession(
+  userId: number,
+  email: string,
+): Promise<string> {
   const payload = {
     userId,
     email,
@@ -65,28 +66,6 @@ export async function getSession(): Promise<SessionPayload | null> {
   }
 }
 
-export async function login(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  })
-
-  if (!user) {
-    throw new Error("Invalid email or password")
-  }
-
-  const isPasswordValid = await bcrypt.compare(password, user.password)
-
-  if (!isPasswordValid) {
-    throw new Error("Invalid email or password")
-  }
-
-  await createSession(user.id, user.email)
-
-  // Return user without password
-  const { password: _, ...userWithoutPassword } = user
-  return userWithoutPassword
-}
-
 export async function logout() {
   ;(await cookies()).delete("session")
   redirect("/login")
@@ -99,6 +78,7 @@ export async function verifySession(
     const { payload } = await jwtVerify(sessionToken, getJwtSecret())
     return payload as unknown as SessionPayload
   } catch (error) {
+    console.error(error)
     return null
   }
 }

@@ -5,7 +5,7 @@ import { getSession, SessionPayload } from "./services"
  * Higher-order function to wrap API route handlers with authentication
  * Usage: export const GET = withAuth(async (request, session) => { ... })
  */
-export function withAuth<T extends any[]>(
+export function withAuth<T extends readonly unknown[] = []>(
   handler: (
     request: NextRequest,
     session: SessionPayload,
@@ -20,6 +20,7 @@ export function withAuth<T extends any[]>(
       }
       return await handler(request, session, ...args)
     } catch (error) {
+      console.error(error)
       return NextResponse.json(
         {
           error: "Unauthorized",

@@ -1,33 +1,33 @@
 import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "@/lib/auth/api-middleware"
-import { getMovements } from "@/lib/movements/services"
 import { TransactionType, Currency, Issuer } from "@prisma/client"
+import { prisma } from "@/prisma/client"
 
 export const GET = withAuth(async (request: NextRequest, session) => {
   try {
     const { searchParams } = new URL(request.url)
-    const search = searchParams.get("search") || ""
+    const search = searchParams.get("search")
     const type = searchParams.get("type") as TransactionType | null
     const currency = searchParams.get("currency") as Currency | null
     const issuer = searchParams.get("issuer") as Issuer | null
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "20")
 
-    const filters: any = {}
-    if (type) filters.type = type
-    if (currency) filters.currency = currency
-    if (issuer) filters.issuer = issuer
-
-    if (search.trim()) {
-      filters.title = {
-        contains: search.trim(),
-        mode: "insensitive",
-      }
-    }
-
-    const movements = await getMovements(session.userId, filters, {
-      limit,
-      offset: (page - 1) * limit,
+    const movements = await prisma.transaction.findMany({
+      where: {
+        card: {
+          userId: session.userId,
+          issuer: issuer ?? undefined,
+        },
+        title: search?.trim() || undefined,
+        type: type ?? undefined,
+        currency: currency ?? undefined,
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: {
+        createdAt: "desc",
+      },
     })
 
     return NextResponse.json({

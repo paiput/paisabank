@@ -15,6 +15,7 @@ async function verifySessionToken(token: string) {
     const { payload } = await jwtVerify(token, getJwtSecret())
     return payload
   } catch (error) {
+    console.error(error)
     return null
   }
 }

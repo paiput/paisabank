@@ -1,6 +1,8 @@
-import { login } from "@/lib/auth/services"
+import { createSession } from "@/lib/auth/services"
+import { prisma } from "@/prisma/client"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
+import bcrypt from "bcrypt"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,7 +26,21 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = validationResult.data
 
-    const user = await login(email, password)
+    const user = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (!user) {
+      throw new Error("Invalid email or password")
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordValid) {
+      throw new Error("Invalid email or password")
+    }
+
+    await createSession(user.id, user.email)
 
     return NextResponse.json({
       success: true,

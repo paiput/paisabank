@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "@/lib/auth/api-middleware"
-import * as cardService from "@/lib/cards/services"
+import { prisma } from "@/prisma/client"
 
 export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
-    const cards = await cardService.getUserCards(session.userId)
+    const cards = await prisma.card.findMany({
+      where: {
+        userId: session.userId,
+      },
+    })
 
     return NextResponse.json({
       success: true,

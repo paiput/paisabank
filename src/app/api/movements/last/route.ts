@@ -1,10 +1,17 @@
 import { withAuth } from "@/lib/auth/api-middleware"
-import { getMovements } from "@/lib/movements/services"
+import { prisma } from "@/prisma/client"
 import { NextRequest, NextResponse } from "next/server"
 
 export const GET = withAuth(async (_request: NextRequest, session) => {
   try {
-    const movements = await getMovements(session.userId, {}, { limit: 5 })
+    const movements = await prisma.transaction.findMany({
+      where: {
+        card: {
+          userId: session.userId,
+        },
+      },
+      take: 5,
+    })
     return NextResponse.json({
       success: true,
       data: movements,
